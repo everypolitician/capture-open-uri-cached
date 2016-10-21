@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+require 'bundler/setup'
+require 'open-uri-cached-archive'
+require 'yaml'
+require 'fileutils'
+
+abort "Usage: #$0 <open-uri-cached-dir> <scraped-page-archive>" if ARGV.size != 2
+
+open_uri_cache_directory, output_directory = ARGV.take(2)
+warn "#{open_uri_cache_directory} -> #{output_directory}"
+
+OpenUriCachedArchive.new(open_uri_cache_directory).responses.each do |r|
+  meta = {
+    'request' => {
+      'method' => 'get',
+      'uri' => r.base_uri.to_s,
+    },
+    'response' => {
+      'status' => {
+        'code' => r.status.first,
+        'message' => r.status.last,
+      },
+      'headers' => r.metas,
+    },
+  }
+
+  file = Pathname.new(File.join(output_directory, r.base_uri.host, Digest::SHA1.hexdigest(r.base_uri.to_s)))
+
+  FileUtils.mkdir_p(file.dirname)
+  file.sub_ext('.yml').write(YAML.dump(meta, indentation: 2))
+  file.sub_ext('.html').write(r.read)
+end

@@ -1,0 +1,19 @@
+GIT
+  remote: https://github.com/everypolitician/open-uri-cached-archive.git
+  revision: 658aa46763ddcf278e3f5ac17084406f36f50007
+  branch: implementation
+  specs:
+    open-uri-cached-archive (0.1.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  open-uri-cached-archive!
+
+BUNDLED WITH
+   1.13.5
